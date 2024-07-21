@@ -14,11 +14,21 @@
         <article class="content px-4">
             @Body
         </article>
+        <article>
+            <h3>@_afterESCText</h3>
+        </article>
     </main>
 </div>
 <ConfirmDialog @ref="confirmDialog" OnConfirm="HandleConfirm" />
 @code {
     private ConfirmDialog confirmDialog;
+    public bool isVisible = false;
+    private string _afterESCText = "Hit ESC :)";
+
+    private void ToggleVisibility()
+    {
+        isVisible = !isVisible;
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -37,6 +47,7 @@
     {
         if (confirmed)
         {
+            _afterESCText = "Pressed ESC, ouch...";
             //do something
         }
     }
