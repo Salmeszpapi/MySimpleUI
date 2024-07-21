@@ -7,6 +7,7 @@ function destroyChart(chart) {
         chart.destroy();
     }
 }
+
 function createChart(canvasId, chartType, labels, data) {
     var ctx = document.getElementById(canvasId).getContext('2d');
     return new Chart(ctx, {
