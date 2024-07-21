@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IJSRuntime JS
+@using MySimpleUI.Components.Shared
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -15,3 +16,28 @@
         </article>
     </main>
 </div>
+<ConfirmDialog @ref="confirmDialog" OnConfirm="HandleConfirm" />
+@code {
+    private ConfirmDialog confirmDialog;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("addEscKeyListener", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void HandleEscKey()
+    {
+        confirmDialog.Show();
+    }
+
+    private async Task HandleConfirm(bool confirmed)
+    {
+        if (confirmed)
+        {
+            //do something
+        }
+    }
+}

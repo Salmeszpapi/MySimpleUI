@@ -1,0 +1,47 @@
+﻿@page "/nuggetRazor"
+<h3>NuggetRazor</h3>
+@using ChartJs.Blazor.PieChart
+
+<ChartJs.Blazor.Chart Config="_pieConfig"></ChartJs.Blazor.Chart>
+
+@code {
+    private PieConfig _pieConfig;
+
+    protected override void OnInitialized()
+    {
+        ConfigurePieConfig();
+    }
+
+    private void ConfigurePieConfig()
+    {
+        _pieConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Metrohm header"
+                }
+            }
+        };
+
+        foreach (var item in new[] { "monday", "tuesday", "Wednesday", "thursday", "Friday" })
+        {
+            _pieConfig.Data.Labels.Add(item);
+        }
+
+        var dataset = new PieDataset<int>(new[] { 35, 50, 15 })
+        {
+            BackgroundColor = new[]
+            {
+                ColorUtil.RandomColorString(),
+                ColorUtil.RandomColorString(),
+                ColorUtil.RandomColorString()
+            }
+        };
+
+        _pieConfig.Data.Datasets.Add(dataset);
+    }
+}

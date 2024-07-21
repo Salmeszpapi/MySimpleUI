@@ -1,0 +1,31 @@
+﻿<div class="modal" style="display:@(ShowDialog ? "block" : "none")">
+    <div class="modal-content">
+        <span class="close" @onclick="CloseDialog">&times;</span>
+        <p>Do you really want to close the application?</p>
+        <button @onclick="ConfirmClose">Yes</button>
+        <button @onclick="CloseDialog">No</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+    private bool ShowDialog { get; set; }
+
+    public void Show()
+    {
+        ShowDialog = true;
+        StateHasChanged();
+    }
+
+    private void CloseDialog()
+    {
+        ShowDialog = false;
+        StateHasChanged();
+    }
+
+    private async Task ConfirmClose()
+    {
+        ShowDialog = false;
+        await OnConfirm.InvokeAsync(true);
+    }
+}

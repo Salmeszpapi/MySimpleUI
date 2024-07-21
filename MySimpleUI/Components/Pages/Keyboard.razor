@@ -1,0 +1,50 @@
+﻿@page "/keyboard"
+@inject IJSRuntime JS
+
+<ul>
+    @foreach (var item in items)
+    {
+        <li tabindex="0" @onkeydown="(e) => HandleListKeyDown(e, item)" @ref="listItems[item]">
+            @item
+        </li>
+    }
+</ul>
+
+@code {
+    private ConfirmDialog confirmDialog;
+    private List<string> items = new List<string> { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6" };
+    private Dictionary<string, ElementReference> listItems = new Dictionary<string, ElementReference>();
+
+    private void HandleListKeyDown(KeyboardEventArgs e, string currentItem)
+    {
+        int index = items.IndexOf(currentItem);
+
+        if (e.Key == "ArrowDown")
+        {
+            MoveFocusToNextItem(index);
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            MoveFocusToPreviousItem(index);
+        }
+    }
+
+    private async Task MoveFocusToNextItem(int currentIndex)
+    {
+        if (currentIndex < items.Count - 1)
+        {
+            await listItems[items[currentIndex + 1]].FocusAsync();
+        }
+    }
+
+    private async Task MoveFocusToPreviousItem(int currentIndex)
+    {
+        if (currentIndex > 0)
+        {
+            await listItems[items[currentIndex - 1]].FocusAsync();
+        }
+    }
+
+
+
+}

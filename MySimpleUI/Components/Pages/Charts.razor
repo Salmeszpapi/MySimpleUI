@@ -10,10 +10,11 @@
 <canvas id="myChart2" width="300" height="100"></canvas>
 <button onclick="@GenerateChartWithRegression"> Generate chart(using regression-js)</button>
 <h1>@currentText</h1>
+<button onclick="@InicializeCallCsharpFromJavascript">printTextFromJavascript</button>
 @code {
     private IJSObjectReference _chart;
     private IJSObjectReference _chart2;
-    private DotNetObjectReference<Chart> _dotNetRef;
+    private DotNetObjectReference<Charts> _dotNetRef;
     private string currentText = "Initial Text";
     protected async Task GenerateChart()
     {
@@ -30,6 +31,7 @@
     {
         if (firstRender)
         {
+            _dotNetRef = DotNetObjectReference.Create(this);
             await GenerateChart();
         }
         base.OnAfterRender(firstRender);
@@ -48,12 +50,12 @@
 
     protected async void InicializeCallCsharpFromJavascript()
     {
-        await JsRuntime.InvokeVoidAsync("CsharpCaller");
+        await JsRuntime.InvokeVoidAsync("csharpCaller", _dotNetRef, "Tell this to JS");
     }
     [JSInvokable]
-    public void CallMeFromJavascript()
+    public void InstanceMethod(string text)
     {
-        currentText = "C# called ";
+        currentText = text;
         InvokeAsync(StateHasChanged);
     }
 }

@@ -1,7 +1,15 @@
-function printText() {
-    console.log("Hellooo");
-}
-// wwwroot/js/chartJsInterop.js chart.js
+window.focusElement = (index) => {
+    document.querySelectorAll('li')[index].focus();
+};
+window.addEscKeyListener = (dotNetHelper) => {
+    console.log("addEscKeyListener called"); // Add this line
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            console.log("Esc key pressed"); // Add this line
+            dotNetHelper.invokeMethodAsync('HandleEscKey');
+        }
+    });
+};
 function destroyChart(chart) {
     if (chart) {
         chart.destroy();
@@ -92,9 +100,10 @@ function createChartWitRegression(canvasId, chartType, labels, data) {
     });
 }
 
-    function createChartWithDots(dotNetObjectReference) {
-        dotNetObjectReference.invokeMethodAsync('InstanceMethod');
-    }
+function csharpCaller(dotNetObjectReference, text) {
+    text = "Tell this to C#";
+    dotNetObjectReference.invokeMethodAsync('InstanceMethod', text);
+}
 
 function createChartWithDots(canvasId, chartType, labels, data) {
     var ctx = document.getElementById(canvasId).getContext('2d');

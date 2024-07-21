@@ -1,0 +1,24 @@
+﻿@page "/focus"
+<h3>Focus</h3>
+
+<input @ref="inputElement" @onfocus="OnFocus" @onblur="OnBlur" />
+<button @onclick="SetFocus">Set Focus</button>
+
+@code {
+    private ElementReference inputElement;
+
+    private async Task SetFocus()
+    {
+        await inputElement.FocusAsync();
+    }
+
+    private void OnFocus()
+    {
+        Console.WriteLine("Input focused");
+    }
+
+    private void OnBlur()
+    {
+        Console.WriteLine("Input lost focus");
+    }
+}
