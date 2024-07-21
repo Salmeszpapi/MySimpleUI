@@ -1,0 +1,59 @@
+﻿@page "/chart"
+@inject IJSRuntime JsRuntime
+
+<h1>Line Chart Example</h1>
+<h4>simple linear chart</h4>
+<canvas id="myChart" width="300" height="100"></canvas>
+<button onclick="@GenerateChart"> Generate chart</button>
+
+<h4>Regression js</h4>
+<canvas id="myChart2" width="300" height="100"></canvas>
+<button onclick="@GenerateChartWithRegression"> Generate chart(using regression-js)</button>
+<h1>@currentText</h1>
+@code {
+    private IJSObjectReference _chart;
+    private IJSObjectReference _chart2;
+    private DotNetObjectReference<Chart> _dotNetRef;
+    private string currentText = "Initial Text";
+    protected async Task GenerateChart()
+    {
+        if (_chart != null)
+        {
+            await JsRuntime.InvokeVoidAsync("destroyChart", _chart);
+        }
+
+        var X = new[] { "January", "February", "March", "April", "May", "June", "July" };
+        var Y = new[] { 150, 59, 0, 81, 1540, 55, 40 };
+        _chart = await JsRuntime.InvokeAsync<IJSObjectReference>("createChart", "myChart", "line", X, Y);
+    }
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GenerateChart();
+        }
+        base.OnAfterRender(firstRender);
+    }
+    protected async Task GenerateChartWithRegression()
+    {
+        if (_chart2 != null)
+        {
+            await JsRuntime.InvokeVoidAsync("destroyChart", _chart2);
+        }
+
+        var labels = new[] { "January", "February", "March", "April", "May", "June", "July" };
+        var data = new[] { 150, 140, 100, 120, 110, 100, 90 };
+        _chart2 = await JsRuntime.InvokeAsync<IJSObjectReference>("createChartWitRegression", "myChart2", "line", labels, data);
+    }
+
+    protected async void InicializeCallCsharpFromJavascript()
+    {
+        await JsRuntime.InvokeVoidAsync("CsharpCaller");
+    }
+    [JSInvokable]
+    public void CallMeFromJavascript()
+    {
+        currentText = "C# called ";
+        InvokeAsync(StateHasChanged);
+    }
+}
